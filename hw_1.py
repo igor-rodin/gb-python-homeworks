@@ -6,7 +6,7 @@ def powers_of_three(num):
     return [(-3)**num for num in range(num)]
 
 
-n = 5
+n = 7
 print(powers_of_three(n))
 
 # Задача 2
@@ -23,8 +23,25 @@ def count_str(substr, string):
     return count
 
 
-string = "PythonIsPyt where Pyth wherePyth"
-what = "where"
+string = "PythonIsPyt where is Pyth where is Pyth"
+what = "where is"
 
 print(
     f"Количество вхождений '{what}' in '{string}' - {count_str(what, string)}")
+
+# Задача 3
+# Написать программу получающую набор произведений чисел от 1 до N.
+# Пример: пусть N = 4, тогда
+# [1, 2, 6, 24] - N!
+
+
+def factorials(num):
+    res = [1]*num
+    for i in range(1, num):
+        res[i] = res[i-1]*(i+1)
+
+    return res
+
+
+num = 6
+print(factorials(num))

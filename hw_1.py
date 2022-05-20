@@ -3,7 +3,7 @@
 # Для N = 5: 1, -3, 9, -27, 81 и т.д. (-3)**(N-1)
 
 def powers_of_three(num):
-    return [(-3)**num for num in range(num)]
+    return [(-3)**n for n in range(num)]
 
 
 n = 7
@@ -45,3 +45,21 @@ def factorials(num):
 
 num = 6
 print(factorials(num))
+
+# Задача 4
+# Подсчитать сумму цифр в вещественном числе.
+
+
+def sum_of_digits(num):
+    summa = 0
+    str_num = str(num)
+    for digit in str_num:
+        if digit == '.':
+            continue
+        summa += int(digit)
+
+    return summa
+
+
+value = 222.22
+print(f"Сумма цифр числа {value}: {sum_of_digits(value)}")

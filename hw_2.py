@@ -71,3 +71,18 @@ def dec_to_bin(digit):  # digit - целое беззнаковое число
 number = 79
 print("----------------------\nЗадача 4")
 print(f"{number} -> {dec_to_bin(number)}")
+
+# Экстра-задачи:
+# 1. Написать программу преобразования двоичного числа в десятичное.
+
+
+def bin_to_dec(bin_num: str) -> int:  # предполагаем число bin_num беззнаковым
+    dec_num = 0
+    for i in range(len(bin_num)):
+        dec_num += int(bin_num[-1-i]) * (2**i)
+    return dec_num
+
+
+number = "1001111"
+print("----------------------\nExtra_1")
+print(f"Bin: {number} -> decimal number: {bin_to_dec(number)}")

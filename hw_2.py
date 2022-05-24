@@ -1,3 +1,4 @@
+import math
 import random
 # Задача 1
 # Найти сумму чисел списка стоящих на нечетной позиции
@@ -178,3 +179,43 @@ def cows_and_bulls():
 print("----------------------\nExtra_2")
 print("Игра 'коровы' и 'быки'")
 cows_and_bulls()
+
+# 4. Простые делители числа 13195 - это 5, 7, 13 и 29.
+# Каков самый большой делитель числа 600851475143, являющийся простым числом?
+
+
+def primes(n):
+    seads = [True]*(n + 1)
+    seads[0] = seads[1] = False
+    for i in range(2, math.ceil(math.sqrt(n))):
+        if seads[i]:
+            for j in range(i**2, n + 1, i):
+                seads[j] = False
+    primes = [i for i in range(2, len(seads)) if seads[i]]
+
+    return primes
+
+
+def greatest_factor(n, count_of_primes):
+    big_number = n
+    primes_numbers = primes(count_of_primes)
+    factor = []
+    product = 1
+    for val in primes_numbers:
+        while n % val == 0:
+            factor.append(val)
+            product *= val
+            n //= val
+        if n <= 0:
+            break
+    if product != big_number:
+        print(
+            f"Не достоточный диапазон простых чисел для нахождения общего делителя числа {big_number}")
+    return factor[-1]
+
+
+n = 600851475143
+count_of_primes = 10000
+print("----------------------\nExtra_4")
+print(
+    f"Наибольший простой делитель числа {n}: {greatest_factor(n, count_of_primes)}")

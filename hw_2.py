@@ -1,6 +1,9 @@
+import random
 # Задача 1
 # Найти сумму чисел списка стоящих на нечетной позиции
 # Пример: [1, 2, 3, 4] -> 4
+
+
 def sum_odd(list):
     sum = 0
     for i in range(0, len(list), 2):
@@ -109,3 +112,69 @@ def sum_even_fib():
 print("----------------------\nExtra_3")
 print(
     f"Сумма всех четных элементов ряда Фибоначчи, которые не превышают четыре миллиона: {sum_even_fib()}")
+
+# 2. Создайте программу, которая будет играть в игру “коровы и быки” с пользователем. Игра работает так:
+
+# Случайным образом генерируйте 4-значное число. Попросите пользователя угадать 4-значное число.
+# За каждую цифру, которую пользователь правильно угадал в нужном месте, у них есть “корова”.
+# За каждую цифру, которую пользователь угадал правильно, в неправильном месте стоит “бык”.
+# Каждый раз, когда пользователь делает предположение, скажите им, сколько у них “коров” и “быков”.
+# Как только пользователь угадает правильное число, игра окончена. Следите за количеством догадок,
+# которые пользователь делает на протяжении всей игры, и сообщите пользователю в конце.
+
+
+def num_to_list(num):
+    num_list = []
+    while num > 0:
+        num_list.append(num % 10)
+        num //= 10
+    num_list.reverse()
+    return num_list
+
+
+def count_cows_bulls(number_rnd: list, number_guess: list):
+    cows = 0
+    bulls = 0
+    for i in range(len(number_rnd)-1, -1, -1):
+        if (number_rnd[i] == number_guess[i]):
+            cows += 1
+            number_rnd.remove(number_rnd[i])
+            number_guess.remove(number_guess[i])
+
+    for i in range(len(number_rnd)-1, -1, -1):
+        if (number_rnd[i] in number_guess):
+            bulls += 1
+            number_guess.remove(number_rnd[i])
+            number_rnd.remove(number_rnd[i])
+
+    return (cows, bulls)
+
+
+def cows_and_bulls():
+    rnd = random.randrange(1000, 10000)
+    print(f"Подсказка - сгенерированное число: {rnd}")
+    game_over = False
+    tries = 0
+    bulls = 0
+    cows = 0
+    while not game_over:
+        tries += 1
+        list_rnd = num_to_list(rnd)
+        print(f"У вас  коров: {cows}, быков: {bulls}")
+        guess = int(input("Угадайте четырехзначное число: "))
+        while guess < 1000 or guess >= 10000:
+            print(f"Число должно быть четырехзначным")
+            guess = int(input("Угадайте четырехзначное число: "))
+        list_guess = num_to_list(guess)
+        cows, bulls = count_cows_bulls(list_rnd, list_guess)
+
+        if cows == 4:
+            game_over = True
+
+    print(
+        f"Вы угадали число {rnd} c {tries} попытки. У вас  коров: {cows}, быков: {bulls}")
+
+
+print("----------------------\nExtra_2")
+print("Игра 'коровы' и 'быки'")
+cows_and_bulls()

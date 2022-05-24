@@ -53,3 +53,21 @@ l3 = [1.1, 1.2, 3.1, 5, 10.01]
 print("----------------------\nЗадача 3")
 print(
     f"Разница между максимальным и минимальным значением дробной части элементов списка {l3} -> {max_min_dif(l3)}")
+
+# Задача 4
+# Написать программу преобразования десятичного числа в двоичное
+
+
+def dec_to_bin(digit):  # digit - целое беззнаковое число
+    bin_number = []
+    while digit > 0:
+        bin_number.append(str(digit % 2))
+        digit //= 2
+    bin_number.reverse()
+
+    return "".join(bin_number)
+
+
+number = 79
+print("----------------------\nЗадача 4")
+print(f"{number} -> {dec_to_bin(number)}")

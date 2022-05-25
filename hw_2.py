@@ -133,21 +133,22 @@ def num_to_list(num):
     return num_list
 
 
-def count_cows_bulls(number_rnd: list, number_guess: list):
+def count_cows_bulls(rnd, guess):
+    rnd_list = num_to_list(rnd)
+    guess_list = num_to_list(guess)
     cows = 0
     bulls = 0
-    for i in range(len(number_rnd)-1, -1, -1):
-        if (number_rnd[i] == number_guess[i]):
+    for i in range(len(rnd_list)-1, -1, -1):
+        if (rnd_list[i] == guess_list[i]):
             cows += 1
-            number_rnd.remove(number_rnd[i])
-            number_guess.remove(number_guess[i])
-
-    for i in range(len(number_rnd)-1, -1, -1):
-        if (number_rnd[i] in number_guess):
+            rnd_list.pop(i)
+            guess_list.pop(i)
+    for i in range(len(rnd_list)-1, -1, -1):
+        if (rnd_list[i] in guess_list):
             bulls += 1
-            number_guess.remove(number_rnd[i])
-            number_rnd.remove(number_rnd[i])
-
+            del_rnd = rnd_list[i]
+            guess_list.remove(del_rnd)
+            rnd_list.pop(i)
     return (cows, bulls)
 
 
@@ -160,14 +161,12 @@ def cows_and_bulls():
     cows = 0
     while not game_over:
         tries += 1
-        list_rnd = num_to_list(rnd)
         print(f"У вас  коров: {cows}, быков: {bulls}")
         guess = int(input("Угадайте четырехзначное число: "))
         while guess < 1000 or guess >= 10000:
             print(f"Число должно быть четырехзначным")
             guess = int(input("Угадайте четырехзначное число: "))
-        list_guess = num_to_list(guess)
-        cows, bulls = count_cows_bulls(list_rnd, list_guess)
+        cows, bulls = count_cows_bulls(rnd, guess)
 
         if cows == 4:
             game_over = True
@@ -219,3 +218,31 @@ count_of_primes = 10000
 print("----------------------\nExtra_4")
 print(
     f"Наибольший простой делитель числа {n}: {greatest_factor(n, count_of_primes)}")
+
+
+# 5. 2520 - самое маленькое число, которое делится без остатка на все числа от 1 до 10.
+# Какое самое маленькое число делится нацело на все числа от 1 до 20?
+
+def lcm_of_seq(n):
+    prim_num = primes(n)
+    for num in range(2, n + 1):
+        if num in prim_num:
+            continue
+        for val in prim_num:
+            counts = 0
+            while num % val == 0:
+                counts += 1
+                num //= val
+            prim_num += [val]*(counts - prim_num.count(val))
+            if n <= 0:
+                break
+    product = 1
+    for val in prim_num:
+        product *= val
+    return product
+
+
+n = 20
+print("----------------------\nExtra_5")
+print(
+    f"Наименьшее число, которое делится нацело на все числа от 1 до {n}: {lcm_of_seq(n)}")

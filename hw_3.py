@@ -1,7 +1,6 @@
+import math
 # 1. Найти НОК двух чисел
 # lcm(a, b) = (a * b)/gcd(a, b)
-
-import math
 
 
 def gcd(a, b):
@@ -92,3 +91,29 @@ def factorize(n):
 N = 130
 print("-------------------------\nЗадача 3")
 print(f"Простые множители числа {N}: {factorize(N)}")
+
+# 4 Дана последовательность чисел. Получить список неповторяющихся элементов исходной последовательности
+# Пример: [1, 2, 3, 5, 1, 5, 3, 10] => [1, 2, 3, 5, 10]
+
+
+def get_uniq(arr):
+    list_uniq = []
+    for val in arr:
+        if val not in list_uniq:
+            list_uniq.append(val)
+
+    return list_uniq
+
+
+print("-------------------------\nЗадача 4")
+arr = [1, 2, 3, 5, 1, 5, 3, 10]
+print(f"Неповторояющиеся элементы списка {arr} -> {get_uniq(arr)}")
+
+# Через приведение к множеству
+
+
+def get_uniq_2(arr):
+    return list(set(arr))
+
+
+print(f"Неповторояющиеся элементы списка {arr} -> {get_uniq_2(arr)}")

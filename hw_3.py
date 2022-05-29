@@ -60,12 +60,11 @@ def primes(n):
 
 
 def factorize(n):
-    primes_numbers = primes(n)
+    primes_numbers = primes(math.ceil(math.sqrt(n)))
     factors = []
     for val in primes_numbers:
         while n % val == 0:
-            if val not in factors:
-                factors.append(val)
+            factors.append(val)
             n //= val
         if n <= 0:
             break
@@ -73,7 +72,7 @@ def factorize(n):
     return factors
 
 
-N = 130
+N = 1234567890
 print("-------------------------\nЗадача 3")
 print(f"Простые множители числа {N}: {factorize(N)}")
 
@@ -230,3 +229,36 @@ def rom_to_dec(rom: str) -> int:
 rom_str = "MDCLXVI"
 print("-------------------------\nExtra задача 1")
 print(f"{rom_str} -> {rom_to_dec(rom_str)}")
+
+# Extra 2
+# Определите функцию, которая удаляет весь текст, следующий за любым из переданных маркеров комментариев. 
+# Любые пробелы в конце строки также должны быть удалены.
+# Пример:
+# Входные данные:
+# «apples, pears  # and bananas
+# grapes
+# bananas !apples          »
+# Выходные данные:
+# «apples, pears
+# grapes
+# bananas»
+# Функция может вызываться вот так:
+# result = function(
+#     "apples, pears # and bananas\ngrapes     \nbananas !apples", ["#", "!"])
+
+
+def trim_comments(text, markers):
+    text_lines = text.split("\n")
+    trimed_text = []
+    for line in text_lines:
+        for mark in markers:
+            line = line[:line.find(mark)]
+        striped_line = line.rstrip()
+        trimed_text.append(striped_line)
+    return "\n".join(trimed_text)
+
+
+text = "@apples, pears # and bananas      \ngrapes  \nbananas  !apples"
+markers = ["#", "!"]
+print("-------------------------\nExtra задача 2")
+print(trim_comments(text, markers))

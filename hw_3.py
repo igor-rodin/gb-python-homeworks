@@ -197,3 +197,36 @@ def max_triangle_path(file_triangle):
 
 print("-------------------------\nExtra задача 3")
 print(f"Максимальна сумма пути: {max_triangle_path(triangle_file)}")
+
+# Extra 1
+# Определите функцию, которая принимает римскую цифру в качестве аргумента
+#  и возвращает ее значение в виде числового десятичного целого числа. Вам не нужно проверять форму римской цифры.
+# Современные римские цифры записываются путем выражения каждой десятичной цифры числа,
+# которое должно быть закодировано отдельно, начиная с самой левой цифры.
+# Таким образом, 1990 отображается "MCMXC" (1000 = M, 900 = CM, 90 = XC),
+# а 2008 отображается "MMVIII" (2000 = MM, 8 = VIII). 
+# Римская цифра для 1666, "MDCLXVI", использует каждую букву в порядке убывания.
+# Пример: имя_вашей_функции ('XXI') # должно вернуть 21
+
+
+def rom_to_dec(rom: str) -> int:
+    rom_dict = {"I": 1, "V": 5, "X": 10,
+                "L": 50, "C": 100, "D": 500, "M": 1000}
+    rom_str = rom.upper()
+    decim_num = 0
+    for i in range(len(rom_str)-1):
+        cur_sym = rom_dict.get(rom_str[i])
+        next_sym = rom_dict.get(rom_str[i+1])
+        if cur_sym >= next_sym:
+            decim_num += cur_sym
+        elif cur_sym < next_sym and (next_sym // cur_sym <= 10):
+            decim_num -= cur_sym
+        i += 1
+    decim_num += rom_dict.get(rom_str[len(rom_str)-1])
+
+    return decim_num
+
+
+rom_str = "MDCLXVI"
+print("-------------------------\nExtra задача 1")
+print(f"{rom_str} -> {rom_to_dec(rom_str)}")

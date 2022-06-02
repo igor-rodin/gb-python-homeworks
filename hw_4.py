@@ -1,11 +1,8 @@
 import random
-# Задача 1:  Дан список чисел. Создать список, в который попадают числа, описывающие возрастающую последовательность.
-# Пример: [1, 5, 2, 3, 4, 6, 1, 7] => [1, 2, 3] или [1, 7] или [1, 6, 7] и т.д.
-# Порядок элементов менять нельзя
-
-
 # Задача 1: Создать и заполнить файл случайными целыми значениями.
 # Выполнить сортировку содержимого файла по возрастанию.
+
+
 def select_sort(array: list) -> list:
     for i in range(len(array)):
         min_i = i
@@ -101,3 +98,34 @@ bonus = 5000
 price = 3
 print("-------------------------\nExtra задача 1")
 print(f"Количество полных уровней: {beeramid(bonus, price)}")
+
+# Задача 3. Вот вам файл с английскими именами. https://cloud.mail.ru/public/J7aq/iHnLspVJR
+# Начните с сортировки в алфавитном порядке. Затем подсчитайте алфавитные значения каждого имени
+# и умножьте это значение на порядковый номер имени в отсортированном списке для получения количества очков имени.
+# Например, если список отсортирован по алфавиту, имя COLIN
+# (алфавитное значение которого 3 + 15 + 12 + 9 + 14 = 53) является 938-м в списке. Поэтому, имя COLIN получает 938 × 53 = 49714 очков.
+# Какова сумма очков имен в файле?
+
+
+def count_abc_points(name: str) -> int:
+    latin_dict = {'A': 1, "B": 2, 'C': 3, 'D': 4,
+                  'E': 5, 'F': 6, 'G': 7, 'H': 8, 'I': 9, 'J': 10, 'K': 11, 'L': 12, 'M': 13, 'N': 14, 'O': 15,  'P': 16,
+                  'Q': 17, 'R': 18, 'S': 19, 'T': 20, 'U': 21, 'V': 22, 'W': 23, 'X': 24, 'Y': 25, 'Z': 26}
+    count = 0
+    for char in name:
+        count += latin_dict[char]
+    return count
+
+
+def sum_points_of_names(file_name: str) -> int:
+    with open(file_name, 'r') as fi:
+        names = fi.read().split(',')
+    names = [name.strip('"').upper() for name in names]
+    names.sort()
+    points = [(i + 1) * count_abc_points(name)
+              for (i, name) in enumerate(names)]
+    return sum(points)
+
+
+file_with_names = 'english_names.txt'
+print(f"Сумма очков имен в файле: {sum_points_of_names(file_with_names)}")

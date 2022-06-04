@@ -128,4 +128,27 @@ def sum_points_of_names(file_name: str) -> int:
 
 
 file_with_names = 'english_names.txt'
+print("-------------------------\nExtra задача 3")
 print(f"Сумма очков имен в файле: {sum_points_of_names(file_with_names)}")
+
+
+# Задача 2. Создать функцию, которая из списка чисел возвращает число, являющее суммой двух или нескольких других элементов,
+# либо возвращающее None, если такого числа нет.
+
+def get_subseq(array: list, size: int, start, subseq=None, level=0) -> None:
+    subseq = subseq or []
+    if size == level:  # and level == size:
+        print(subseq, end=" ")
+        return
+
+    for val in array[start:-1]:
+        subseq.append(val)
+        get_subseq(array, size, start + 1, subseq, level + 1)
+        subseq.pop()
+        print(f"start: {start}")
+
+
+print("-------------------------\nExtra задача 2")
+print(ar)
+size = 2
+get_subseq(ar, size, 0)

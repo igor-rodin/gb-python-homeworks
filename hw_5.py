@@ -1,4 +1,5 @@
 
+import enum
 from functools import reduce
 import math
 from random import randint
@@ -10,39 +11,54 @@ text = "абвгдеж рабав копыто мыло фабв Абкн абр
 pattern = 'абв'
 
 
-def check_word(val: str) -> bool:
-    word = val.lower()
-    for char in pattern:
-        if char in word:
-            return False
-    return True
-
-
-def filter_text(text: str):
-    text_list = text.split()
-    text_list = list(filter(check_word, text_list))
+def filter_text(text: str, pattern):
+    text_list = list(
+        filter(lambda word: pattern not in word.lower(), text.split()))
     return ' '.join(text_list)
 
 
 print("-------------------------\nЗадача 1")
-print(filter_text(text))
+print(filter_text(text, pattern))
 
 # Задача 2. Вы когда-нибудь играли в игру "Крестики-нолики"? Попробуйте создать её, причем чтобы сыграть в нее можно было в одиночку.
 
 
-def get_players_names() -> tuple:
-    print("Введите имена игроков")
-    player_1 = input("Имя первого игрока: ")
-    player_2 = input("Имя второго игрока: ")
+class GameMode(enum.Enum):
+    human_human = 1
+    human_comp = 2
+
+
+def choose_game_mode() -> enum.Enum:
+    game_type = int(
+        input("Выберите тип игры:\n1 - Игра с человеком\n2 - Игра с компьютером\n"))
+    return GameMode.human_human if game_type == 1 else GameMode.human_comp
+
+
+def get_players_names(game_mode: GameMode) -> tuple:
+    if game_mode == GameMode.human_human:
+        print("Введите имена игроков")
+        player_1 = input("Имя первого игрока: ")
+        player_2 = input("Имя второго игрока: ")
+
+    else:
+        print("Введите своё имя")
+        player_1 = input("Ваше имя: ")
+        player_2 = "Bot"
     return (player_1, player_2)
 
 
 def get_position() -> tuple:
-    pos = tuple(map(int, input("Куда ходим? ").split()))
+    pos = tuple(map(int, input("Куда ходим? (вертикаль горизонталь): ").split()))
     return (pos[0] - 1, pos[1] - 1)
 
 
-def draw_game_board(game_board: dict):
+def get_bot_position() -> tuple:
+    pos_vert = randint(1, 3)
+    pos_hor = randint(1, 3)
+    return (pos_vert - 1, pos_hor - 1)
+
+
+def draw_game_board(game_board: list):
     size = int(math.sqrt(len(game_board)))
     print()
     for j in range(size):
@@ -51,19 +67,18 @@ def draw_game_board(game_board: dict):
     for i in range(size):
         print(f"{i+1} ", end=" ")
         for j in range(size):
-            print(f"| {game_board.get(i * size + j)} |", end="  ")
+            print(f"| {game_board[i * size + j]} |", end="  ")
         print()
     print()
 
 
-def check_winners(board: dict, symb: str, pos: tuple) -> bool:
+def check_winners(board: list, symb: str, pos: tuple) -> bool:
     size = int(math.sqrt(len(board)))
 
-    main_diag = tuple(board.values())[::size + 1].count(symb)
-    ad_diag = tuple(board.values())[size - 1:-2:size - 1].count(symb)
-    hor = tuple(board.values())[pos[0] * size:pos[0] * size + size].count(symb)
-    vert = tuple(board.values())[pos[1]:pos[0] * size + 1:size].count(symb)
-
+    main_diag = board[::size + 1].count(symb)
+    ad_diag = board[size - 1:-2:size - 1].count(symb)
+    hor = board[pos[0] * size:pos[0] * size + size].count(symb)
+    vert = board[pos[1]:pos[1] + 2 * size + 1:size].count(symb)
     if main_diag == size or ad_diag == size or hor == size or vert == size:
         return True
 
@@ -72,10 +87,15 @@ def check_winners(board: dict, symb: str, pos: tuple) -> bool:
 
 def tic_tac_toe():
     print("\tИгра 'крестики-нолики'")
+
+    game_mode = choose_game_mode()
     symbols = ["X", "O"]
-    players = get_players_names()
+    players = get_players_names(game_mode)
     rnd = randint(0, 1)
-    players_symb = {symbols[0]: players[rnd], symbols[1]: players[1-rnd]}
+    if game_mode == GameMode.human_human:
+        players_symb = {symbols[0]: players[rnd], symbols[1]: players[1-rnd]}
+    else:
+        players_symb = {symbols[0]: players[0], symbols[1]: players[1]}
 
     print(
         f"Играют: {players_symb[symbols[0]]} - '{symbols[0]}' и  {players_symb[symbols[1]]} - '{symbols[1]}'")
@@ -83,7 +103,7 @@ def tic_tac_toe():
     board_size = 3
     turn = 0
     has_winners = False
-    game_board = {i: '.' for i in range(board_size*board_size)}
+    game_board = ['.' for _ in range(board_size*board_size)]
     visited_pos = []
 
     draw_game_board(game_board)
@@ -106,7 +126,21 @@ def tic_tac_toe():
         game_board[pos[0] * board_size + pos[1]] = current_symb
         draw_game_board(game_board)
         has_winners = check_winners(game_board, current_symb, pos)
+        if game_mode == GameMode.human_comp and not has_winners:
+            turn += 1
+            current_symb = symbols[1]
+            print(f"Ход {players_symb[current_symb]} - {current_symb}")
+            while True:
+                bot_pos = get_bot_position()
+                if bot_pos not in visited_pos:
+                    visited_pos.append(bot_pos)
+                    break
+            game_board[bot_pos[0] * board_size + bot_pos[1]] = current_symb
+            draw_game_board(game_board)
+            has_winners = check_winners(game_board, current_symb, bot_pos)
+
         turn += 1
+
     print("Game Over!")
     print(f"Игрок {players_symb[current_symb]} выиграл!") if has_winners else print(
         "Ничья!")
@@ -156,6 +190,7 @@ def double_word_check(val: str) -> str:
             continue
         else:
             sentence = sentence[:idx_trash] + sentence[idx_trash+len(word):]
+
     return sentence.strip().capitalize()
 
 
